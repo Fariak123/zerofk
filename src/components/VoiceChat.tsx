@@ -1,17 +1,19 @@
 import {useState} from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 
-import {
-    IAgoraRTCClient, IAgoraRTCRemoteUser,
+import AgoraRTC, {
+    IAgoraRTCClient,
+    IAgoraRTCRemoteUser,
     LocalUser,
     RemoteUser,
     useJoin,
-    // useLocalCameraTrack,
-    useLocalMicrophoneTrack, useLocalScreenTrack,
+    useLocalMicrophoneTrack,
+    useLocalScreenTrack,
     usePublish,
     useRemoteAudioTracks,
     useRemoteUsers,
 } from "agora-rtc-react";
+import {AIDenoiserExtension} from "agora-extension-ai-denoiser";
 
 function sortByVideo(data: IAgoraRTCRemoteUser[]): IAgoraRTCRemoteUser[] {
     const array = data;
@@ -28,6 +30,7 @@ export const VoiceChat = (
 
     const client = props.client;
     const userUID = client.uid;
+
     const { channelName } = useParams() //pull the channel name from the param
 
     // set the connection state
@@ -38,11 +41,29 @@ export const VoiceChat = (
     // const [cameraOn, setCamera] = useState(false);
     const [shareScreenOn, setShareScreen] = useState(false);
 
-
-    // get local video and mic tracks
     // const { localCameraTrack } = useLocalCameraTrack(cameraOn);
     const { localMicrophoneTrack } = useLocalMicrophoneTrack(micOn);
     const { screenTrack } = useLocalScreenTrack(shareScreenOn, {encoderConfig: "1080p_1", optimizationMode: "detail"}, "disable");
+
+    const denoiser = new AIDenoiserExtension({assetsPath:'./external'});
+    // if (!denoiser.checkCompatibility()) console.error("Does not support AI Denoiser!");
+
+    AgoraRTC.registerExtensions([denoiser]);
+    const processor = denoiser.createProcessor();
+    processor.enable()
+
+    processor.on('overload', () => {
+        processor.disable()
+    })
+    if (localMicrophoneTrack) {
+        localMicrophoneTrack.pipe(processor);
+        localMicrophoneTrack.pipe(localMicrophoneTrack.processorDestination);
+    }
+
+
+    // localMicrophoneTrack?.pipe(processor).pipe(localMicrophoneTrack?.processorDestination);
+    // processor.setLevel(AIDenoiserProcessorLevel.SOFT).then(() => {})
+
 
     // to leave the call
     const navigate = useNavigate()

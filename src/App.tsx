@@ -24,7 +24,7 @@ function App() {
 
     return (
         <Routes>
-            <Route path='/zerofk' element={ <ConnectForm connectToVideo={ handleConnect } /> } />
+            <Route path='/' element={ <ConnectForm connectToVideo={ handleConnect } /> } />
             <Route path='/via/:channelName' element={
                 <AgoraRTCProvider client={agoraClient}>
                     <VoiceChat client={agoraClient} appId={appId}/>
