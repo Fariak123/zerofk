@@ -23,10 +23,10 @@ function sortByVideo(data: IAgoraRTCRemoteUser[]): IAgoraRTCRemoteUser[] {
 
 
 export const VoiceChat = (
-    props: {client: IAgoraRTCClient}
+    props: {client: IAgoraRTCClient, appId: string}
 ) => {
 
-    const appId = '45abfe047c594560b20efe19613fd893'
+    // const appId = '45abfe047c594560b20efe19613fd893'
     const client = props.client;
     const userUID = client.uid;
     const { channelName } = useParams() //pull the channel name from the param
@@ -51,7 +51,7 @@ export const VoiceChat = (
     // Join the channel
     useJoin(
         {
-            appid: appId,
+            appid: props.appId,
             channel: channelName!,
             token: null,
         },
@@ -137,7 +137,7 @@ export const VoiceChat = (
                                                 onClick={() => {
                                                     setShareScreen(false);
                                                     setActiveConnection(false)
-                                                    navigate('/')
+                                                    navigate('/zerofk')
                                                 }}> Disconnect
                                         </button>
                                     </div>
