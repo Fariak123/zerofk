@@ -1,0 +1,206 @@
+body {
+  margin: 0;
+  min-width: 968px;
+}
+
+#root {
+  max-width: 100vw;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #099DFD);
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.box {
+  padding-top: 2em;
+  width: 63vw;
+  height: 32vh;
+  background: #aaa0a0;
+}
+
+.navbarData {
+  padding-right: 2.5em;
+  font-weight: bold;
+}
+
+.navbar {
+  width: 100vw;
+  justify-content: space-between;
+  padding-left: 15px;
+  display: flex;
+  align-items: center;
+  top: 0;
+  left: 0;
+  position: fixed;
+  border: 1px solid white;
+  background-color: #14783f;
+  box-shadow: 5px 2px 2px white;
+  z-index: 2;
+}
+
+#channelName {
+  display: block;
+  padding: 15px;
+  margin: 0 0 25px;
+  width: 50vw;
+  max-width: 500px;
+}
+
+.card button:hover {
+  border-color: #099DFD;
+  background-color: #099DFD;
+}
+
+#userUID {
+  display: flex;
+  left: 15px;
+  bottom: 45px;
+  position: relative;
+  z-index: 1;
+}
+
+.text-user {
+  background-color: #494b50;
+  padding: 2px 5px;
+  border-radius: 15px;
+}
+
+#controlsToolbar {
+  bottom: 15px;
+  right: 15px;
+  left: 15px;
+  position: absolute;
+  z-index: 3;
+}
+
+#mediaControls button {
+  margin: 0 5px 7px;
+  padding: 5px;
+}
+
+#mediaControls button:hover {
+  border-color: #099DFD;
+}
+
+
+#endConnection {
+  border-color: red;
+  opacity: 50%;
+}
+
+#endConnection:hover {
+  background-color: red;
+  border-color: white;
+  opacity: 100%;
+}
+
+#localVideo {
+  width: 50vw;
+  aspect-ratio: 16/9;
+  max-width: 360px;
+  min-width: 240px;
+  position: fixed;
+  right: 25px;
+  bottom: 25px;
+  margin: 0;
+  border: 1px solid #699ac1;
+  z-index: 2;
+}
+
+#remoteVideoGrid {
+  display: flex;
+  padding-top: 5em;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: start;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.remote-modal-container {
+  position: absolute;
+  left: 3em;
+  top: 6em;
+  width: calc(1920px / 2);
+  height: calc(1080px / 2);
+  background: #e43b3b;
+  /*z-index: 2;*/
+  /*overflow-y: hidden;*/
+}
+
+.backBTN {
+  background-color: #e43b3b;
+  padding: 3px 12px;
+  border-radius: 15px;
+
+  font-weight: bold;
+  /*border: 1px solid white;*/
+  color: #e8dddd;
+  position: absolute;
+  left: 4em;
+  top: 7.5em;
+  z-index: 4;
+}
+
+.backBTN:hover {
+  background-color: #e8dddd;
+  color: #e43b3b;
+}
+
+.remote-video-modal {
+  position: relative;
+  width: 120%;
+  height: 109%;
+  /*overflow: hidden;*/
+  border: 2px solid #d0ddd0;
+}
+
+.remote-video-container {
+  position: relative;
+  width: 28vw;
+  aspect-ratio: 16/9;
+  max-width: 720px;
+  min-width: 360px;
+  overflow: hidden;
+  border: 2px solid #d0ddd0;
+  border-radius: 15px;
+}
+
+.buttonOn {
+  transition-duration: 0.4s;
+  background-color: #14783f; /* Green */
+  color: #ffffff;
+}
+
+.buttonOn:hover {
+  background-color: #ffffff; /* Green */
+  color: #1eaf3e;
+}
+
+.buttonOff {
+  transition-duration: 0.4s;
+  background-color: #e43b3b; /* Green */
+  color: #ffffff;
+}
+
+.buttonOff:hover {
+  background-color: #fafafa; /* Green */
+  color: #e43b3b;
+}
