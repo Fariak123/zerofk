@@ -26,7 +26,6 @@ export const VoiceChat = (
     props: {client: IAgoraRTCClient, appId: string}
 ) => {
 
-    // const appId = '45abfe047c594560b20efe19613fd893'
     const client = props.client;
     const userUID = client.uid;
     const { channelName } = useParams() //pull the channel name from the param
