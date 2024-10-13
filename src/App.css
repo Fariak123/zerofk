@@ -36,8 +36,13 @@ body {
   height: 32vh;
   background: #aaa0a0;
 }
+.left-space {
+  padding-left: 20px;
+}
 
 .navbarData {
+  display: flex;
+  justify-content: center;
   padding-right: 2.5em;
   font-weight: bold;
 }
@@ -53,7 +58,6 @@ body {
   position: fixed;
   border: 1px solid white;
   background-color: #14783f;
-  box-shadow: 5px 2px 2px white;
   z-index: 2;
 }
 
@@ -145,9 +149,14 @@ body {
 }
 
 .remote-modal-container {
+  /*position: relative;*/
+  /*height: 0;*/
   position: absolute;
+  align-content: center;
   left: 3em;
   top: 6em;
+  /*width: 100vw;*/
+  /*height: 100vh;*/
   width: calc(1920px / 2);
   height: calc(1080px / 2);
   background: #e43b3b;
@@ -175,9 +184,13 @@ body {
 }
 
 .remote-video-modal {
-  position: relative;
-  width: 120%;
-  height: 109%;
+  /*position: absolute;*/
+  /*width: 120%;*/
+  /*height: 109%;*/
+  left: 3em;
+  top: 6em;
+  width: 100%;
+  height: 100%;
   /*overflow: hidden;*/
   border: 2px solid #d0ddd0;
 }

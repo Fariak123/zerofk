@@ -13,19 +13,18 @@ import {useState} from "react";
 function App() {
     const navigate = useNavigate()
     const agoraClient = useRTCClient(AgoraRTC.createClient({ codec: "av1", mode: "rtc" })); // Initialize Agora Client
+
     const [appId, setAppId] = useState("");
-    // AgoraRTC.setParameter("AUDIO_VOLUME_INDICATION_INTERVAL", 200)
-    // agoraClient.enableAudioVolumeIndicator()
 
     const handleConnect = (channelName: string, app_id: string) => {
         setAppId(app_id);
-        navigate(`/via/${channelName}`) // on form submit, navigate to new route
+        navigate(`/zerofk/via/${channelName}`) // on form submit, navigate to new route
     }
 
     return (
         <Routes>
-            <Route path='/' element={ <ConnectForm connectToVideo={ handleConnect } /> } />
-            <Route path='/via/:channelName' element={
+            <Route path='/zerofk/' element={ <ConnectForm connectToVideo={ handleConnect } /> } />
+            <Route path='/zerofk/via/:channelName' element={
                 <AgoraRTCProvider client={agoraClient}>
                     <VoiceChat client={agoraClient} appId={appId}/>
                 </AgoraRTCProvider>
