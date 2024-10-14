@@ -1,14 +1,22 @@
 import {useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 
+import microOnIcon from './icons/micro-on.svg';
+import microOffIcon from './icons/micro-off.svg';
+import headPhonesOnIcon from './icons/headphones-on.svg';
+import headPhonesOffIcon from './icons/headphones-off.svg';
+import screenOnIcon from './icons/screen-on.svg';
+import screenOffIcon from './icons/screen-off.svg';
+import disconnectIcon from './icons/disconnect.svg';
+
 import {
     IAgoraRTCClient,
     IAgoraRTCRemoteUser,
     LocalUser, RemoteAudioTrack,
     RemoteUser,
     useJoin,
-    useLocalMicrophoneTrack, useLocalScreenTrack,
-    useRemoteAudioTracks, useRemoteUsers,
+    useLocalMicrophoneTrack, useLocalScreenTrack, usePublish,
+    useRemoteUsers,
 } from "agora-rtc-react";
 
 function sortByVideo(data: IAgoraRTCRemoteUser[]): IAgoraRTCRemoteUser[] {
@@ -26,35 +34,22 @@ export const VoiceChat = (
     }
 ) => {
 
-    // const client_screen = props.client_screen;
-    // const client = useRTCClient(AgoraRTC.createClient({ codec: "vp8", mode: "rtc" })); // Initialize Agora Client
-
     const client = props.client;
     const userUID = client.uid;
 
-    const { channelName } = useParams() //pull the channel name from the param
+    const { channelName } = useParams()
 
-    // set the connection state
     const [activeConnection, setActiveConnection] = useState(true);
 
-    // track the mic/video state - Turn on Mic and Camera On
     const [micOn, setMic] = useState(false);
-    // const [cameraOn, setCamera] = useState(false);
+    const [headPhones, setHeadPhones] = useState(true);
     const [shareScreenOn, setShareScreen] = useState(false);
 
-    // const { localCameraTrack } = useLocalCameraTrack(cameraOn);
     const { localMicrophoneTrack } = useLocalMicrophoneTrack(micOn, {encoderConfig: 'high_quality_stereo', ANS: true, AGC: false, AEC: false});
-    // const client_screen = useRTCClient(AgoraRTC.createClient({codec: "av1", mode: "rtc"}));
     const { screenTrack } = useLocalScreenTrack(shareScreenOn, {encoderConfig: "1080p_5", optimizationMode: "detail"}, "disable");
-    // const screenTrack = AgoraRTC.createScreenVideoTrack({encoderConfig: "1080p_5", optimizationMode: "detail" }, 'auto')
-    // to leave the call
-
-    // const [innerWidth, setInnerWidth] = useState(window.innerWidth);
-    // const [innerHeight, setInnerHeight] = useState(window.innerHeight);
 
     const navigate = useNavigate()
 
-    // Join the channel
     useJoin(
         {
             appid: props.appId,
@@ -64,8 +59,7 @@ export const VoiceChat = (
         activeConnection,
     );
 
-    if (localMicrophoneTrack) client.publish(localMicrophoneTrack).then(() => {})
-    // usePublish([localMicrophoneTrack], true, client);
+    usePublish([localMicrophoneTrack])
 
     if (!shareScreenOn && screenTrack) {
         client.unpublish(screenTrack).then(() => {})
@@ -73,16 +67,11 @@ export const VoiceChat = (
         client.publish(screenTrack).then(() => {})
     }
 
-    //remote users
-    // const remoteUsers = useRemoteUsers();
     const remoteUsers = useRemoteUsers();
-    // const remoteUserScreen = client.remoteUsers;
-    const { audioTracks } = useRemoteAudioTracks(remoteUsers);
-
-    // play the remote user audio tracks
-    audioTracks.forEach((track) => {
-        track.play()
-    });
+    // const { audioTracks } = useRemoteAudioTracks(remoteUsers);
+    // audioTracks.forEach((track) => {
+    //     track.play()
+    // });
 
     if (!micOn) {
         localMicrophoneTrack?.setMuted(true);
@@ -98,13 +87,32 @@ export const VoiceChat = (
         setModal(!modal);
     }
 
+    if (userUID === undefined) {
+        const element = document.getElementById('uid')
+        if (element) {
+            element.style.color = '#C96868'
+        }
+    } else {
+        const element = document.getElementById('uid')
+        if (element) {
+            element.style.color = '#ffffff'
+        }
+    }
+
     return (
-        <div className={"container"}>
+        <div>
             <div className={"navbar"}>
-                <h2>{"ZeroFK"}</h2>
+                <h2 style={{display: 'flex'}}>
+                    <div>ZeroFK</div>
+                    <div style={{fontFamily: 'ruthie-regular', paddingLeft: "5px", paddingTop: "10px", color: "#b07dff"}}>x SpaceBlack</div>
+                </h2>
                 <div className={"navbarData"}>
-                    <div>{`Lobby: ${channelName}`}</div>
-                    <div className={'left-space'}>{`User ID: ${userUID}`}</div>
+                    <div className={'left-space'}>{`Lobby: ${channelName}`}</div>
+                    <div className={'left-space'} style={{display: 'flex', gap: '4px'}}>
+                        <div>{`User ID:`}</div>
+                        <div id={'uid'}>{userUID}</div>
+                    </div>
+
                 </div>
             </div>
             {!modal ? (
@@ -112,79 +120,109 @@ export const VoiceChat = (
                     <div id='remoteVideoGrid'>
                         {
                             sortByVideo(remoteUsers).reverse().map((user) => {
-                                return (
-                                    <div>
-                                        <div id={`user-${user.uid}`} key={user.uid} className={"remote-video-container"}
-                                             onClick={() => {toggleModal(user)}}>
-                                            <RemoteUser user={user} />
-                                            {/*<RemoteAudioTrack key={user.uid} play={true} track={user.audioTrack} />*/}
+                                    return (
+                                        <div>
+                                            <div id={`user-${user.uid}`} key={user.uid} className={"remote-video-container"}
+                                                 onClick={() => {
+                                                     toggleModal(user)
+                                                 }}>
+                                                <RemoteUser user={user} playAudio={headPhones}/>
+                                            </div>
+                                            <div id={"userUID"}>
+                                                <div className={'text-user'}>{user.uid}</div>
+                                            </div>
                                         </div>
-                                        <div id={"userUID"}>
-                                            <div className={'text-user'}>{user.uid}</div>
-                                        </div>
-                                    </div>
-                                )}
+                                    )
+                                }
                             )
                         }
-                    </div>
-                    <div>
-                        <div id='localVideo'>
-                            <LocalUser
-                                // audioTrack={localMicrophoneTrack}
-                                videoTrack={screenTrack}
-                                cameraOn={shareScreenOn}
-                                micOn={micOn}
-                                // playAudio={micOn}
-                                playVideo={shareScreenOn}
-                            />
-                            <div>
-                                <div id="controlsToolbar">
-                                    <div id="mediaControls">
-                                        <button className={micOn ? 'buttonOn' : 'buttonOff'}
-                                                onClick={() => setMic(a => !a)}>
-                                            Micro
-                                        </button>
-                                        <button className={shareScreenOn ? 'buttonOn' : 'buttonOff'}
-                                                onClick={() => setShareScreen(a => !a)}>
-                                            Share screen
-                                        </button>
-                                        <button id="endConnection"
-                                                onClick={() => {
-                                                    setShareScreen(false);
-                                                    setActiveConnection(false)
-                                                    navigate('/zerofk/')
-                                                }}> Disconnect
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </>
             ) : (
                 <div style={{display: "flex"}}>
                     <div className={"backBTN"} onClick={() => setModal(false)}>Back</div>
-                    <div className={"remote-modal-container"} style={{width: (selectedUser.videoTrack ? (selectedUser.videoTrack.getCurrentFrameData().width / 2) : undefined), height: (selectedUser.videoTrack ? (selectedUser.videoTrack.getCurrentFrameData().height / 2) : undefined)}}>
+                    <div className={"remote-modal-container"} style={{
+                        width: (selectedUser.videoTrack ? (selectedUser.videoTrack.getCurrentFrameData().width / 2) : undefined),
+                        height: (selectedUser.videoTrack ? (selectedUser.videoTrack.getCurrentFrameData().height / 2) : undefined)
+                    }}>
                         <div id={`user-${selectedUser.uid}`} key={selectedUser.uid}
                              className={"remote-video-modal"}>
-                            <RemoteUser user={selectedUser} />
+                            <RemoteUser user={selectedUser} playAudio={headPhones}/>
                         </div>
                         <div id={"userUID"}>
                             <div className={'text-user'}>{selectedUser.uid}</div>
                         </div>
                     </div>
                     <div id='remoteVideoGrid'>
-                        {remoteUsers.reverse().map((user) => (
-                            <div>
-                                <div id={`user-${user.uid}`} key={user.uid}>
-                                    <RemoteAudioTrack key={user.uid} play={true} track={user.audioTrack}/>
-                                </div>
-                            </div>
-                            )
+                        {remoteUsers.reverse().map((user) => {
+                                if (user.uid === selectedUser.uid) {
+                                    return (
+                                        <div>
+                                            <div id={`user-${user.uid}`} key={user.uid}>
+                                                <RemoteAudioTrack key={user.uid} play={headPhones} track={user.audioTrack}/>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+                            }
                         )}
                     </div>
                 </div>
             )}
+            <div id='localVideo'>
+                <LocalUser
+                    videoTrack={screenTrack}
+                    cameraOn={shareScreenOn}
+                    micOn={micOn}
+                    playVideo={shareScreenOn}
+                />
+                <div>
+                    <div id="controlsToolbar">
+                        <div id="mediaControls">
+                            <button className={micOn ? 'buttonOn' : 'buttonOff'}
+                                    onClick={() => setMic(a => !a)}>
+                                <div className={'control-icons'}>
+                                {micOn ? (
+                                    <img src={microOnIcon} alt={"Micro"}/>
+                                ) : (
+                                    <img src={microOffIcon} alt={"Micro"}/>
+                                )}
+                                </div>
+                            </button>
+                            <button className={headPhones ? 'buttonOn' : 'buttonOff'}
+                                    onClick={() => setHeadPhones(a => !a)}>
+                                <div className={'control-icons'}>
+                                    {headPhones ? (
+                                        <img src={headPhonesOnIcon} alt={"Headphones"}/>
+                                    ) : (
+                                        <img src={headPhonesOffIcon} alt={"Headphones"}/>
+                                    )}
+                                </div>
+                            </button>
+                            <button className={shareScreenOn ? 'buttonOn' : 'buttonOff'}
+                                    onClick={() => setShareScreen(a => !a)}>
+                                <div className={'control-icons'}>
+                                    {shareScreenOn ? (
+                                        <img src={screenOnIcon} alt={"ShareScreen"}/>
+                                    ) : (
+                                        <img src={screenOffIcon} alt={"ShareScreen"}/>
+                                    )}
+                                </div>
+                            </button>
+                            <button id="endConnection"
+                                    onClick={() => {
+                                        setShareScreen(false);
+                                        setActiveConnection(false)
+                                        navigate('/zerofk/')
+                                    }}>
+                                <div className={'control-icons'}>
+                                        <img src={disconnectIcon} alt={"Disconnect"} style={{color: '#ffffff'}}/>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

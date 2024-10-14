@@ -1,6 +1,11 @@
-body {
-  margin: 0;
-  min-width: 968px;
+@font-face {
+  font-family: 'ruthie-regular';
+  src: url('./assets/fonts/ruthie-regular.ttf') format('truetype');
+}
+
+.add-theme {
+  display: flex;
+  flex-direction: column;
 }
 
 #root {
@@ -10,16 +15,31 @@ body {
   text-align: center;
 }
 
+.form-container {
+  position: relative;
+  border: 1px solid #888888;
+  padding: 6em 1em 3em 1em;
+  background: #494b50;
+  opacity: 90%;
+  border-radius: 2em;
+  box-shadow: 5px 8px 10px #587c8c;
+  z-index: 1;
+}
+
 .logo {
   background: #ffffff;
   border-radius: 96px;
   height: 9em;
-  /*padding: 1.5em;*/
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
-  filter: drop-shadow(0 0 2em #ffc800);
+  filter: drop-shadow(0 0 3em crimson);
+}
+
+.btnConnect:hover {
+  filter: drop-shadow(0 0 5px wheat);
 }
 
 .card {
@@ -57,7 +77,10 @@ body {
   left: 0;
   position: fixed;
   border: 1px solid white;
-  background-color: #14783f;
+  /*background-color: #ACDEAA;*/
+  /*background: #FFC6C6;*/
+  background: #595B83;
+  color: #ffffff;
   z-index: 2;
 }
 
@@ -96,6 +119,12 @@ body {
   border-radius: 15px;
 }
 
+.control-icons {
+  display: flex;
+  width: 20px;
+  height: 20px;
+}
+
 #controlsToolbar {
   bottom: 15px;
   right: 15px;
@@ -129,7 +158,7 @@ body {
   width: 50vw;
   aspect-ratio: 16/9;
   max-width: 360px;
-  min-width: 240px;
+  min-width: 337px;
   position: fixed;
   right: 25px;
   bottom: 25px;
@@ -149,19 +178,13 @@ body {
 }
 
 .remote-modal-container {
-  /*position: relative;*/
-  /*height: 0;*/
   position: absolute;
   align-content: center;
   left: 3em;
   top: 6em;
-  /*width: 100vw;*/
-  /*height: 100vh;*/
   width: calc(1920px / 2);
   height: calc(1080px / 2);
   background: #e43b3b;
-  /*z-index: 2;*/
-  /*overflow-y: hidden;*/
 }
 
 .backBTN {
@@ -170,7 +193,6 @@ body {
   border-radius: 15px;
 
   font-weight: bold;
-  /*border: 1px solid white;*/
   color: #e8dddd;
   position: absolute;
   left: 4em;
@@ -184,20 +206,16 @@ body {
 }
 
 .remote-video-modal {
-  /*position: absolute;*/
-  /*width: 120%;*/
-  /*height: 109%;*/
   left: 3em;
   top: 6em;
   width: 100%;
   height: 100%;
-  /*overflow: hidden;*/
   border: 2px solid #d0ddd0;
 }
 
 .remote-video-container {
   position: relative;
-  width: 28vw;
+  /*width: 28vw;*/
   aspect-ratio: 16/9;
   max-width: 720px;
   min-width: 360px;
@@ -207,23 +225,25 @@ body {
 }
 
 .buttonOn {
-  transition-duration: 0.4s;
-  background-color: #14783f; /* Green */
+  transition-duration: 5s;
+  background-color: #14783f;
   color: #ffffff;
 }
 
 .buttonOn:hover {
-  background-color: #ffffff; /* Green */
+  background-color: #494b50;
   color: #1eaf3e;
 }
 
 .buttonOff {
-  transition-duration: 0.4s;
-  background-color: #e43b3b; /* Green */
+  transition-duration: 5s;
+  /*background-color: #e43b3b;*/
+  background-color: #FF7878;
   color: #ffffff;
 }
 
 .buttonOff:hover {
-  background-color: #fafafa; /* Green */
-  color: #e43b3b;
+  background-color: #494b50;
+  /*color: #e43b3b;*/
+  color: #FF7878;
 }

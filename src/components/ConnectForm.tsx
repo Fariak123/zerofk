@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import logo from './../assets/logo.svg'
+import './animation.scss'
 
 interface ConnectFormProps {
     connectToVideo: (channelName: string, appId: string) => void
@@ -13,15 +14,13 @@ export const ConnectForm = ({ connectToVideo } : ConnectFormProps) => {
 
 
     const handleConnect = (e: React.FormEvent<HTMLFormElement>) => {
-        // trim spaces
         const trimmedChannelName = channelName.trim()
         const trimmedAppId = appId.trim()
 
-        // validate input: make sure channelName is not empty
         if (trimmedChannelName === '' && trimmedAppId === '') {
-            e.preventDefault() // keep the page from reloading on form submission
-            setInvalidInputMsg("App ID and Channel name can't be empty.") // show warning
-            setChannelName('') // resets channel name value in case user entered blank spaces
+            e.preventDefault()
+            setInvalidInputMsg("App ID and Channel name can't be empty.")
+            setChannelName('')
             return;
         }
 
@@ -29,32 +28,56 @@ export const ConnectForm = ({ connectToVideo } : ConnectFormProps) => {
     }
 
     return (
-        <form onSubmit={handleConnect}>
-            <img src={logo} className="logo" alt="logo" />
-            <div className="card">
-                <input
-                    id="appId"
-                    type='text'
-                    placeholder='App ID'
-                    value={appId}
-                    onChange={(e) => {
-                        setAppId(e.target.value)
-                        setInvalidInputMsg('') // clear the error message
-                    }}
-                />
-                <input
-                    id="channelName"
-                    type='text'
-                    placeholder='Channel Name'
-                    value={channelName}
-                    onChange={(e) => {
-                        setChannelName(e.target.value)
-                        setInvalidInputMsg('') // clear the error message
-                    }}
-                />
-                <button>Connect</button>
-                {invalidInputMsg && <p style={{color: 'red'}}> {invalidInputMsg} </p>}
+        <div className="add-theme">
+            <div className="form-container">
+                <form onSubmit={handleConnect}>
+                    <img src={logo} className="logo" alt="logo"/>
+                    <div className="card">
+                        <input
+                            id="appId"
+                            type='text'
+                            placeholder='App ID (- u can get it from owner or his followers)'
+                            value={appId}
+                            onChange={(e) => {
+                                setAppId(e.target.value)
+                                setInvalidInputMsg('')
+                            }}
+                        />
+                        <input
+                            id="channelName"
+                            type='text'
+                            placeholder='Channel Name (- connect to or create channel with typed {name})'
+                            value={channelName}
+                            onChange={(e) => {
+                                setChannelName(e.target.value)
+                                setInvalidInputMsg('')
+                            }}
+                        />
+                        <button className={'btnConnect'} style={{color: "#000000", background: "#ffffff"}}>Connect</button>
+                        {invalidInputMsg && <p style={{color: 'red'}}> {invalidInputMsg} </p>}
+                    </div>
+                </form>
             </div>
-        </form>
+            <div className={"stars"}>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+                <div className="star"></div>
+            </div>
+        </div>
     )
 }
