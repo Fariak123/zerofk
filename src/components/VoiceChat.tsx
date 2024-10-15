@@ -100,11 +100,11 @@ export const VoiceChat = (
     }
 
     return (
-        <div>
+        <div className="vc-background">
             <div className={"navbar"}>
                 <h2 style={{display: 'flex'}}>
-                    <div>ZeroFK</div>
-                    <div style={{fontFamily: 'ruthie-regular', paddingLeft: "5px", paddingTop: "10px", color: "#b07dff"}}>x SpaceBlack</div>
+                    <div className={'gold'}>ZeroFK</div>
+                    <div style={{fontFamily: 'ruthie-regular', paddingLeft: "5px", color: "#b07dff", textShadow: "0 0 5px #ffffff"}}>x SpaceBlack</div>
                 </h2>
                 <div className={"navbarData"}>
                     <div className={'left-space'}>{`Lobby: ${channelName}`}</div>

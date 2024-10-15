@@ -30,10 +30,12 @@ export const ConnectForm = ({ connectToVideo } : ConnectFormProps) => {
     return (
         <div className="add-theme">
             <div className="form-container">
-                <form onSubmit={handleConnect}>
+                <div style={{paddingBottom: "3em"}}>
                     <img src={logo} className="logo" alt="logo"/>
+                </div>
+                <form onSubmit={handleConnect}>
                     <div className="card">
-                        <input
+                    <input
                             id="appId"
                             type='text'
                             placeholder='App ID (- u can get it from owner or his followers)'
@@ -53,13 +55,14 @@ export const ConnectForm = ({ connectToVideo } : ConnectFormProps) => {
                                 setInvalidInputMsg('')
                             }}
                         />
-                        <button className={'btnConnect'} style={{color: "#000000", background: "#ffffff"}}>Connect</button>
+                        <button className={'btnConnect'} style={{color: "#000000", background: "#ffffff"}}>Connect
+                        </button>
                         {invalidInputMsg && <p style={{color: 'red'}}> {invalidInputMsg} </p>}
                     </div>
                 </form>
             </div>
             <div className={"stars"}>
-                <div className="star"></div>
+            <div className="star"></div>
                 <div className="star"></div>
                 <div className="star"></div>
                 <div className="star"></div>
