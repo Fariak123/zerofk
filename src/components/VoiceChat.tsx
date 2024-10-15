@@ -45,7 +45,11 @@ export const VoiceChat = (
     const [headPhones, setHeadPhones] = useState(true);
     const [shareScreenOn, setShareScreen] = useState(false);
 
-    const { localMicrophoneTrack } = useLocalMicrophoneTrack(micOn, {encoderConfig: 'high_quality_stereo', ANS: true, AGC: false, AEC: false});
+    const { localMicrophoneTrack } = useLocalMicrophoneTrack(micOn, {encoderConfig: 'high_quality_stereo',
+        ANS: true,
+        AGC: true,
+        AEC: false,
+    });
     const { screenTrack } = useLocalScreenTrack(shareScreenOn, {encoderConfig: "1080p_5", optimizationMode: "detail"}, "disable");
 
     const navigate = useNavigate()
