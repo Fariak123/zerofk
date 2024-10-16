@@ -70,7 +70,7 @@
   /*border: 1px solid white;*/
   border-bottom: 1px solid #9a81c5;
   /*background: #595B83;*/
-  box-shadow: 5px 8px 10px #595B83;
+  box-shadow: 0 8px 10px #595B83;
   color: #ffffff;
   z-index: 2;
 }
@@ -96,9 +96,6 @@
   background: -webkit-linear-gradient(#d8c69c, #bda351, #8e6a28);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  /*-webkit-animation-name: shine;*/
-  /*-webkit-animation-duration: 2s;*/
-  /*-webkit-animation-iteration-count: infinite;*/
 }
 
 @-webkit-keyframes gold {
