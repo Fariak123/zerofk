@@ -1,6 +1,7 @@
-import {useState} from "react";
+import React, {useCallback, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 
+import settingsIcon from './icons/settings.svg'
 import microOnIcon from './icons/micro-on.svg';
 import microOffIcon from './icons/micro-off.svg';
 import headPhonesOnIcon from './icons/headphones-on.svg';
@@ -8,6 +9,8 @@ import headPhonesOffIcon from './icons/headphones-off.svg';
 import screenOnIcon from './icons/screen-on.svg';
 import screenOffIcon from './icons/screen-off.svg';
 import disconnectIcon from './icons/disconnect.svg';
+import volumeOnIcon from './icons/volumeOn.svg';
+import volumeOffIcon from './icons/volumeOff.svg';
 
 import {
     IAgoraRTCClient,
@@ -18,6 +21,7 @@ import {
     useLocalMicrophoneTrack, useLocalScreenTrack, usePublish,
     useRemoteUsers,
 } from "agora-rtc-react";
+import {useHotkeys} from "react-hotkeys-hook";
 
 function sortByVideo(data: IAgoraRTCRemoteUser[]): IAgoraRTCRemoteUser[] {
     const array = data;
@@ -103,40 +107,134 @@ export const VoiceChat = (
         }
     }
 
+    const [keyMic, setKeyMic] = useState('v')
+    const [keyHeadphones, setKeyHeadphones] = useState('m')
+
+
+    const handleMicKey = useCallback(() => {
+        setMic(!micOn)
+    }, [micOn])
+
+    const handleHeadphonesKey = useCallback(() => {
+        setHeadPhones(!headPhones)
+    }, [headPhones])
+
+    useHotkeys(keyMic, handleMicKey)
+    useHotkeys(keyHeadphones, handleHeadphonesKey)
+
+    const handleSetNewKey = (e: React.KeyboardEvent, type: string) => {
+        if (e.key) {
+            if (type === 'micro') {
+                setKeyMic(e.key)
+            } else if (type === 'headphones') {
+                setKeyHeadphones(e.key)
+            }
+        }
+    }
+
+    const [volume, setVolume] = useState(100);
+    const [showSettings, setShowSettings] = useState(false);
+
+    if (showSettings) {
+        document.getElementById('body')?.classList.add('show-drawer');
+        document.getElementById('settings-icon')?.classList.add('active');
+    } else {
+        document.getElementById('body')?.classList.remove('show-drawer');
+        document.getElementById('settings-icon')?.classList.remove('active');
+    }
+
     return (
-        <div className="vc-background">
+        <div id={'body'}>
             <div className={"navbar"}>
                 <h2 style={{display: 'flex'}}>
                     <div className={'gold'}>ZeroFK</div>
                     <div style={{fontFamily: 'ruthie-regular', paddingLeft: "5px", color: "#b07dff", textShadow: "0 0 5px #ffffff"}}>x SpaceBlack</div>
                 </h2>
+
                 <div className={"navbarData"}>
                     <div className={'left-space'}>{`Lobby: ${channelName}`}</div>
                     <div className={'left-space'} style={{display: 'flex', gap: '4px'}}>
                         <div>{`User ID:`}</div>
-                        <div id={'uid'}>{userUID}</div>
+                        <div id={'uid'}>{userUID ?? 'undefined'}</div>
                     </div>
-
                 </div>
+
+                <button className={'btn-settings'} style={{display: 'flex', gap: '4px', opacity: showSettings ? "0" : "1"}}
+                onClick={()=>{setShowSettings(a => !a); console.log(showSettings)}}>
+                    <div className={'control-icons'}>
+                        <img src={settingsIcon} alt={"settings"} />
+                    </div>
+                    <div>Settings</div>
+                </button>
+
             </div>
             {!modal ? (
                 <>
+                    <div id={'drawer'}>
+                        <div className={'nav-modal'}>
+                            <button className={'btn-settings'}
+                                    style={{display: 'flex', gap: '4px'}}
+                                    onClick={() => {
+                                        setShowSettings(a => !a);
+                                        console.log(showSettings)
+                                    }}>
+                                <div className={'control-icons'}>
+                                    <img id={'settings-icon'} src={settingsIcon} alt={"settings"}/>
+                                </div>
+                                <div>Settings</div>
+                            </button>
+                        </div>
+                        <div style={{height: '76px', color: 'transparent'}}></div>
+
+                        <div style={{position: 'relative', backgroundColor: 'rgba(103,103,103,0.65)', padding: '1em', paddingBottom: '3em', borderRadius: '15px', border: '1px solid #fff'}}>
+                            <h2 style={{paddingBottom: '1em'}}>Hotkeys</h2>
+                                <div style={{display: 'flex', alignItems: 'center', gap: '1em'}}>
+                                    <div className={'modal-action-text'}>(Off/On) MICROPHONE</div>
+                                    <button onKeyDown={(e) => handleSetNewKey(e, 'micro')}>{keyMic}</button>
+                                </div>
+
+                                <div style={{display: 'flex', alignItems: 'center', gap: '1em', paddingTop: '2em'}}>
+                                    <div className={'modal-action-text'}>(Off/On) HEADPHONES</div>
+                                    <button onKeyDown={(e) => handleSetNewKey(e, 'headphones')}>{keyHeadphones}</button>
+                                </div>
+                        </div>
+
+                    </div>
+
                     <div id='remoteVideoGrid'>
                         {
                             sortByVideo(remoteUsers).reverse().map((user) => {
-                                    return (
+                                return (
+                                    <div className={'remote-full-container'}>
                                         <div>
-                                            <div id={`user-${user.uid}`} key={user.uid} className={"remote-video-container"}
+                                            <div className={'remote-addition'}>
+                                                <div id={"userUID"}>
+                                                    <div className={'text-user'}>{user.uid}</div>
+                                                </div>
+                                                <input
+                                                    id={'range'}
+                                                    type='range'
+                                                    min={0}
+                                                    max={100}
+                                                    step={1}
+                                                    onChange={(e) => {
+                                                        setVolume(e.target.valueAsNumber)
+                                                    }}
+                                                />
+                                                <img style={{width: "20px"}}
+                                                     src={volume > 0 ? volumeOnIcon : volumeOffIcon} alt={"volume"}/>
+                                                <div style={{paddingTop: "3px"}}>{volume}</div>
+                                            </div>
+                                            <div id={`user-${user.uid}`} key={user.uid}
+                                                 className={"remote-video-container"}
                                                  onClick={() => {
                                                      toggleModal(user)
                                                  }}>
-                                                <RemoteUser user={user} playAudio={headPhones}/>
-                                            </div>
-                                            <div id={"userUID"}>
-                                                <div className={'text-user'}>{user.uid}</div>
+                                                <RemoteUser user={user} playAudio={headPhones} volume={volume}/>
                                             </div>
                                         </div>
-                                    )
+                                    </div>
+                                )
                                 }
                             )
                         }
@@ -153,18 +251,18 @@ export const VoiceChat = (
                              className={"remote-video-modal"}>
                             <RemoteUser user={selectedUser} playAudio={headPhones}/>
                         </div>
-                        <div id={"userUID"}>
-                            <div className={'text-user'}>{selectedUser.uid}</div>
+                        <div id={"userUID-modal"}>
+                            <div className={'text-user-modal'}>{selectedUser.uid}</div>
                         </div>
                     </div>
                     <div id='remoteVideoGrid'>
                         {remoteUsers.reverse().map((user) => {
-                                if (user.uid === selectedUser.uid) {
-                                    return (
-                                        <div>
-                                            <div id={`user-${user.uid}`} key={user.uid}>
-                                                <RemoteAudioTrack key={user.uid} play={headPhones} track={user.audioTrack}/>
-                                            </div>
+                            if (user.uid === selectedUser.uid) {
+                                return (
+                                    <div>
+                                        <div id={`user-${user.uid}`} key={user.uid}>
+                                            <RemoteAudioTrack key={user.uid} play={headPhones} track={user.audioTrack}/>
+                                        </div>
                                         </div>
                                     )
                                 }
